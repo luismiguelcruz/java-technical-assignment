@@ -68,3 +68,38 @@ Clone or fork this project into a _publicly accessible_ git repository of your o
 [tpadberg@qmetric.co.uk](mailto:tpadberg@qmetric.co.uk). 
 
 Good Luck!
+
+## Approach
+I've added a Discount interface that can be implemented for all the discounts. All the discounts should implement
+this interface and define the method calculateDiscount for the item received.
+
+For doing it, any item should be provided with the kind of discount that we want to apply. So there is a discount
+strategy defined in each one.
+
+Item interface has now 3 extra methods to be implemented in the specific item classes
+- BigDecimal discount();
+This method should be implemented in any item implementation. It calls the discount implementation to calculate
+the discount to each item. At the moment I think there is not any difference between the implementation in ItemByUnit
+and the one in ItemByWeight. I create one in each item but we can avoid duplication of code defining it maybe in the 
+interface as a default method or in an abstract class. I didn't think specifically on it yet.    
+
+- BigDecimal amount();
+This method is used to know the number of elements of each item bought. We need it to pass to the specific discount 
+strategy and calculate it. 
+
+- BigDecimal priceByUnit();
+We could have a problem with the ItemByWeight if we want to apply the specific discount. For example let's say that we
+ want a discount of One kilo at half price. We can't calculate it as price is already defined as
+ ```product.pricePerKilo().multiply(weightInKilos).setScale(2, BigDecimal.ROUND_HALF_UP);```. As this discount needs
+ the pricePerKilo I have added this extra pricePerUnit method that contains the price per kilo in Weighted items
+ and just call the ```price()``` method in ItemByUnit.
+
+## Testing
+I added 2 tests classes to check the Discounts already defined. I didn't add any test on BasketTest as I covered
+ the discounts on the unit test classes. I think it could be enough, but we could add an extra test in BasketTest class 
+also with a real list of elements.
+
+## Possible Improvements
+- At the moment all the discounts can be applied to all kind of items (itemByUnit and ItemByWeight). That's not ideal 
+because some offers can only be defined for some kind of items. To prevent this I've added a basic check in some discount
+in order to throw an exception (not caught at the moment) to avoid this situation. 

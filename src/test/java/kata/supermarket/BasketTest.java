@@ -1,6 +1,8 @@
 package kata.supermarket;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,6 +22,7 @@ class BasketTest {
     void basketProvidesTotalValue(String description, String expectedTotal, Iterable<Item> items) {
         final Basket basket = new Basket();
         items.forEach(basket::add);
+        System.out.println();
         assertEquals(new BigDecimal(expectedTotal), basket.total());
     }
 
